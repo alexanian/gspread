@@ -26,6 +26,7 @@ from .urls import (
     SPREADSHEET_VALUES_URL,
     SPREADSHEET_VALUES_BATCH_URL,
     SPREADSHEET_BATCH_UPDATE_URL,
+    SPREADSHEET_VALUES_BATCH_UPDATE_URL,
     SPREADSHEET_VALUES_APPEND_URL,
     SPREADSHEET_VALUES_CLEAR_URL
 )
@@ -168,6 +169,37 @@ class Spreadsheet(object):
 
         url = SPREADSHEET_VALUES_BATCH_URL % (self.id)
         r = self.client.request("get", url, params=params)
+        return r.json()
+
+    def values_batch_update(self):
+        """Lower-level method that directly calls `spreadsheets.values.batchUpdate <https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/batchUpdate>`_.
+
+        :param dict body: `Request body <https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/batchUpdate#request-body>`_.
+        :returns: `Response body <https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets.values/batchUpdate#response-body>`_.
+        :rtype: dict
+
+        Example::
+
+            sh.values_batch_update(
+                body={
+                    'valueInputOption': 'RAW',
+                    'data': {
+                        'range': 'Sheet1!B2:C5',
+                        "majorDimension": "ROWS",
+                        'values': [[1, 2, 3], [4, 5, 6]]
+                    }
+                }
+            )
+
+        .. versionadded:: 3.0
+
+        """
+        r = self.client.request(
+            'post',
+            SPREADSHEET_VALUES_BATCH_UPDATE_URL % self.id,
+            json=body
+        )
+
         return r.json()
 
     def values_update(self, range, params=None, body=None):
