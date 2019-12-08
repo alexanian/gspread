@@ -344,6 +344,10 @@ class Spreadsheet(object):
 
         return worksheet
 
+    def delete(self):
+        """Deletes this spreadsheet."""
+        self.batch_update(body={"requests": [{"deleteSheet": {"sheetId": self.id}}]})
+
     def del_worksheet(self, worksheet):
         """Deletes a worksheet from a spreadsheet.
 
